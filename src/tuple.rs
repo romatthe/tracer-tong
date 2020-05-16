@@ -1,7 +1,7 @@
 use crate::util::float_cmp;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub struct Tuple {
     x: f64,
     y: f64,
@@ -53,6 +53,15 @@ impl Tuple {
             self.z * right.x - self.x * right.z,
             self.x * right.y - self.y * right.x,
         )
+    }
+}
+
+impl PartialEq for Tuple {
+    fn eq(&self, other: &Self) -> bool {
+        float_cmp(self.x, other.x)
+            && float_cmp(self.y, other.y)
+            && float_cmp(self.z, other.z)
+            && float_cmp(self.w, other.w)
     }
 }
 
