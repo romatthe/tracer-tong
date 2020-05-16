@@ -1,3 +1,1 @@
-mod color;
-mod tuple;
-mod util;
+pub mod core;

@@ -1,4 +1,4 @@
-use crate::util::float_cmp;
+use crate::core::util::float_cmp;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Debug)]

@@ -1,11 +1,11 @@
+use crate::core::util::float_cmp;
 use std::ops::{Add, Sub, Mul};
-use crate::util::float_cmp;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Color {
-    red: f64,
-    green: f64,
-    blue: f64,
+    pub red: f64,
+    pub green: f64,
+    pub blue: f64,
 }
 
 impl PartialEq for Color {
