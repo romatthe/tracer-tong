@@ -1,6 +1,6 @@
 use crate::core::util::float_cmp;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Tuple {
     x: f64,
     y: f64,
@@ -25,6 +25,22 @@ pub fn is_vector(tuple: &Tuple) -> bool {
 }
 
 impl Tuple {
+    pub fn x(&self) -> f64 {
+        self.x
+    }
+
+    pub fn y(&self) -> f64 {
+        self.y
+    }
+
+    pub fn z(&self) -> f64 {
+        self.z
+    }
+
+    pub fn w(&self) -> f64 {
+        self.w
+    }
+
     pub fn magnitude(&self) -> f64 {
         let p = self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2);
 

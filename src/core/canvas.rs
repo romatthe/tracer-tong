@@ -248,4 +248,16 @@ mod tests {
         assert_eq!(lines[2], expected_row_3);
         assert_eq!(lines[3], expected_row_4);
     }
+
+    #[test]
+    fn ppm_files_are_terminated_by_a_newline_character() {
+        // Given
+        let c = Canvas::new(5, 3);
+
+        // When
+        let ppm = c.as_ppm();
+
+        // Then
+        assert_eq!(ppm.chars().last().unwrap(), '\n');
+    }
 }
