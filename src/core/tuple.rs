@@ -41,6 +41,15 @@ impl Tuple {
         self.w
     }
 
+    pub fn from(tuple: [f64; 4]) -> Tuple {
+        Tuple {
+            x: tuple[0],
+            y: tuple[1],
+            z: tuple[2],
+            w: tuple[3]
+        }
+    }
+
     pub fn magnitude(&self) -> f64 {
         let p = self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2);
 
