@@ -1,7 +1,7 @@
 [package]
 name = "tracer-tong"
 version = "0.1.0"
-authors = ["Robin Mattheussen <robin.mattheussen@gmail.com>"]
+authors = ["Robin Mattheussen <me@romatthe.dev>"]
 edition = "2018"
 
 [dependencies]
