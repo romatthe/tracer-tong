@@ -4,6 +4,7 @@ use crate::vec::{Point, Vec3};
 
 mod color;
 mod ray;
+mod scene;
 mod vec;
 
 fn ray_color(r: &Ray) -> Color {
