@@ -16,6 +16,10 @@ pub struct Hit {
 }
 
 impl Hit {
+    pub fn normal(&self) -> &Vec3 {
+        &self.normal
+    }
+
     fn set_face_normal(&mut self, ray: &Ray, outward_normal: Vec3) {
         self.front_face = ray.direction().dot(&outward_normal) < 0.0;
         self.normal = if self.front_face {

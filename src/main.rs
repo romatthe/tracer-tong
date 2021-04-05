@@ -1,18 +1,18 @@
 use crate::color::{Color};
 use crate::ray::Ray;
 use crate::vec::{Point, Vec3};
+use crate::scene::{Hit, SceneObject, Sphere};
 
 mod color;
 mod ray;
 mod scene;
 mod vec;
 
-fn ray_color(r: &Ray) -> Color {
-    let t = hit_sphere(&Point::new(0.0, 0.0, -1.0), 0.5, r);
+fn ray_color(r: &Ray, world: &dyn SceneObject) -> Color {
+    let mut hit = Hit::default();
 
-    if t > 0.0 {
-        let n = (r.at(t) - Vec3::new(0.0, 0.0, -1.0)).unit();
-        return Color::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0) * 0.5;
+    if world.hit(r, 0.0, f32::INFINITY, &mut hit) {
+        return (Color::new(1.0, 1.0, 1.0) + hit.normal()) * 0.5;
     }
 
     let unit_direction = r.direction().unit();
@@ -47,6 +47,12 @@ fn main() {
     const IMAGE_WIDTH: u32 = 400;
     const IMAGE_HEIGHT: u32 = ((IMAGE_WIDTH as f32) / ASPECT_RATIO) as u32;
 
+    // World
+    let world: Vec<Box<dyn SceneObject>> = vec![
+        Box::new(Sphere::new(Point::new(0.0, 0.0, -1.0), 0.5)),
+        Box::new(Sphere::new(Point::new(0.0, -100.5, -1.0), 100.0)),
+    ];
+
     // Camera
     let viewport_height = 2.0;
     let viewport_width = ASPECT_RATIO * viewport_height;
@@ -69,7 +75,7 @@ fn main() {
             let v = (h as f32) / ((IMAGE_HEIGHT - 1) as f32);
             let r = Ray::new(origin.clone(),  (&horizontal * u) + &lower_left_corner + (&vertical * v) - &origin);
 
-            let color = ray_color(&r);
+            let color = ray_color(&r, &world);
 
             color::write_color(color);
         }
