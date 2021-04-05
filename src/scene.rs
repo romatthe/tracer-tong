@@ -1,10 +1,13 @@
 use crate::vec::{Point, Vec3};
 use crate::ray::Ray;
 
+pub type SceneObjectVec = Vec<Box<dyn SceneObject>>;
+
 pub trait SceneObject {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32, hit: &mut Hit) -> bool;
 }
 
+#[derive(Clone)]
 pub struct Hit {
     front_face: bool,
     point: Point,
@@ -19,6 +22,17 @@ impl Hit {
             outward_normal
         }  else {
             -outward_normal
+        }
+    }
+}
+
+impl Default for Hit {
+    fn default() -> Self {
+        Hit {
+            front_face: false,
+            point: Point::new(0.0, 0.0, 0.0),
+            normal: Vec3::new(0.0, 0.0, 0.0),
+            t: 0.0
         }
     }
 }
@@ -72,8 +86,20 @@ impl SceneObject for Sphere {
     }
 }
 
-impl SceneObject for Vec<Box<dyn SceneObject>> {
+impl SceneObject for SceneObjectVec {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32, hit: &mut Hit) -> bool {
-        todo!()
+        let mut temp_hit = Hit::default();
+        let mut has_hit = false;
+        let mut closest_so_far = t_max;
+
+        for object in self {
+            if object.hit(ray, t_min, closest_so_far, &mut temp_hit) {
+                has_hit = true;
+                closest_so_far = temp_hit.t.clone();
+                *hit = temp_hit.clone();
+            }
+        }
+
+        has_hit
     }
 }
