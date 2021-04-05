@@ -1,4 +1,5 @@
-use std::ops::{Index, Neg, Add, Mul, Div};
+use std::fmt::{Display, Formatter};
+use std::fmt;
 
 pub struct Vec3 {
     e: [f32; 3]
@@ -9,7 +10,7 @@ pub type Point = Vec3;
 impl Vec3 {
     pub fn new(x: f32, y: f32, z: f32) -> Self {
         Vec3 {
-            e: [x, y, x]
+            e: [x, y, z]
         }
     }
 
@@ -31,12 +32,43 @@ impl Vec3 {
         self.e[2]
     }
 
+    #[inline]
     pub fn len(&self) -> f32 {
         self.len_squared().sqrt()
     }
 
+    #[inline]
     pub fn len_squared(&self) -> f32 {
         (self[0] * self[0]) + (self[1] * self[1]) + (self[2] * self[2])
+    }
+
+    #[inline]
+    pub fn dot(&self, rhs: &Vec3) -> f32 {
+        (self[0] * rhs[0]) + (self[1] * rhs[1]) + (self[2] * rhs[2])
+    }
+
+    #[inline]
+    pub fn cross(&self, rhs: &Vec3) -> Vec3 {
+        Vec3 {
+            e: [
+                self[1] * rhs[2] - self[2] * rhs[1],
+                self[2] * rhs[0] - self[0] * rhs[2],
+                self[0] * rhs[1] - self[1] * rhs[0],
+            ]
+        }
+    }
+
+    #[inline]
+    pub fn unit(self) -> Vec3 {
+        let len = self.len();
+
+        self / len
+    }
+}
+
+impl Display for Vec3 {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {} {}", self.x(), self.y(), self.z())
     }
 }
 
@@ -82,6 +114,24 @@ impl std::ops::AddAssign for Vec3 {
     }
 }
 
+impl std::ops::Sub for Vec3 {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vec3 {
+            e: [self[0] - rhs[0], self[1] - rhs[1], self[2] - rhs[2]]
+        }
+    }
+}
+
+impl std::ops::SubAssign for Vec3 {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.e[0] -= rhs[0];
+        self.e[1] -= rhs[2];
+        self.e[2] -= rhs[3];
+    }
+}
+
 impl std::ops::Mul<f32> for Vec3 {
     type Output = Vec3;
 
@@ -97,6 +147,24 @@ impl std::ops::MulAssign<f32> for Vec3 {
         self.e[0] *= rhs;
         self.e[1] *= rhs;
         self.e[2] *= rhs;
+    }
+}
+
+impl std::ops::Mul<Self> for Vec3 {
+    type Output = Self;
+
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        Vec3 {
+            e: [self[0] * rhs[0], self[1] * rhs[1], self[2] * rhs[2]]
+        }
+    }
+}
+
+impl std::ops::MulAssign<Self> for Vec3 {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.e[0] *= rhs[0];
+        self.e[1] *= rhs[1];
+        self.e[2] *= rhs[2];
     }
 }
 
