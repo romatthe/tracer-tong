@@ -6,6 +6,7 @@ use crate::scene::{Hit, SceneObject, Sphere};
 mod color;
 mod ray;
 mod scene;
+mod util;
 mod vec;
 
 fn ray_color(r: &Ray, world: &dyn SceneObject) -> Color {
