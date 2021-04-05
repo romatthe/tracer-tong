@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::fmt;
+use std::ops::Mul;
 
 pub type Point = Vec3;
 
@@ -106,6 +107,16 @@ impl std::ops::Add for Vec3 {
     }
 }
 
+impl std::ops::Add<&Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn add(self, rhs: &Vec3) -> Self::Output {
+        Vec3 {
+            e: [self[0] + rhs[0], self[1] + rhs[1], self[2] + rhs[2]]
+        }
+    }
+}
+
 impl std::ops::AddAssign for Vec3 {
     fn add_assign(&mut self, rhs: Self) {
         self.e[0] += rhs[0];
@@ -133,6 +144,16 @@ impl std::ops::SubAssign for Vec3 {
 }
 
 impl std::ops::Mul<f32> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: f32) -> Self::Output {
+        Vec3 {
+            e: [self[0] * rhs, self[1] * rhs, self[2] * rhs]
+        }
+    }
+}
+
+impl std::ops::Mul<f32> for &Vec3 {
     type Output = Vec3;
 
     fn mul(self, rhs: f32) -> Self::Output {

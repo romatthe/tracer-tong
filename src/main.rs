@@ -1,6 +1,7 @@
 use crate::color::{Color};
 
 mod color;
+mod ray;
 mod vec;
 
 const IMAGE_WIDTH: u32 = 256;
