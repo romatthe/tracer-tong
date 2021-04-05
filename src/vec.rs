@@ -1,9 +1,9 @@
 use std::fmt::{Display, Formatter};
 use std::fmt;
-use std::ops::Mul;
 
 pub type Point = Vec3;
 
+#[derive(Clone)]
 pub struct Vec3 {
     e: [f32; 3]
 }
@@ -60,7 +60,7 @@ impl Vec3 {
     }
 
     #[inline]
-    pub fn unit(self) -> Vec3 {
+    pub fn unit(&self) -> Vec3 {
         let len = self.len();
 
         self / len
@@ -135,6 +135,26 @@ impl std::ops::Sub for Vec3 {
     }
 }
 
+impl std::ops::Sub<&Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: &Vec3) -> Self::Output {
+        Vec3 {
+            e: [self[0] - rhs[0], self[1] - rhs[1], self[2] - rhs[2]]
+        }
+    }
+}
+
+impl std::ops::Sub for &Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vec3 {
+            e: [self[0] - rhs[0], self[1] - rhs[1], self[2] - rhs[2]]
+        }
+    }
+}
+
 impl std::ops::SubAssign for Vec3 {
     fn sub_assign(&mut self, rhs: Self) {
         self.e[0] -= rhs[0];
@@ -191,6 +211,16 @@ impl std::ops::MulAssign<Self> for Vec3 {
 
 impl std::ops::Div<f32> for Vec3 {
     type Output = Self;
+
+    fn div(self, rhs: f32) -> Self::Output {
+        Vec3 {
+            e: [self[0] / rhs, self[1] / rhs, self[2] / rhs]
+        }
+    }
+}
+
+impl std::ops::Div<f32> for &Vec3 {
+    type Output = Vec3;
 
     fn div(self, rhs: f32) -> Self::Output {
         Vec3 {
