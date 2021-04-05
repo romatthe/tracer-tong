@@ -1,11 +1,11 @@
 use std::fmt::{Display, Formatter};
 use std::fmt;
 
+pub type Point = Vec3;
+
 pub struct Vec3 {
     e: [f32; 3]
 }
-
-pub type Point = Vec3;
 
 impl Vec3 {
     pub fn new(x: f32, y: f32, z: f32) -> Self {

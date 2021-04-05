@@ -1,3 +1,6 @@
+use crate::color::{Color};
+
+mod color;
 mod vec;
 
 const IMAGE_WIDTH: u32 = 256;
@@ -13,15 +16,13 @@ fn main() {
         eprint!("\rScanlines remaining: {}", h);
 
         for w in 0..IMAGE_WIDTH {
-            let r = (w as f32) / ((IMAGE_WIDTH - 1) as f32);
-            let g = (h as f32) / ((IMAGE_HEIGHT - 1) as f32);
-            let b = 0.25;
+            let color = Color::new(
+                (w as f32) / ((IMAGE_WIDTH - 1) as f32),
+                (h as f32) / ((IMAGE_HEIGHT - 1) as f32),
+                0.25
+            );
 
-            let ir = (255.999 * r as f32) as u32;
-            let ig = (255.999 * g as f32) as u32;
-            let ib = (255.999 * b as f32) as u32;
-
-            println!("{} {} {}", ir, ig, ib);
+            color::write_color(color);
         }
     }
 
