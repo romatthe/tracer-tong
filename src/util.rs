@@ -10,7 +10,7 @@ pub fn rand_float() -> f32 {
     rand::random()
 }
 
-pub fn rand_float_between(min: f32, max: f32) -> f32 {
+pub fn rand_float_ranged(min: f32, max: f32) -> f32 {
     RAND.with(|r| {
         Uniform::from(min..max).sample(&mut *r.borrow_mut())
     })

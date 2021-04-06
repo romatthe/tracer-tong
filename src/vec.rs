@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::fmt;
+use crate::util::{rand_float, rand_float_ranged};
 
 pub type Point = Vec3;
 
@@ -18,6 +19,31 @@ impl Vec3 {
     pub fn empty() -> Self {
         Vec3 {
             e: [0.0, 0.0, 0.0]
+        }
+    }
+
+    pub fn random() -> Self {
+        Vec3 {
+            e: [rand_float(), rand_float(), rand_float()]
+        }
+    }
+
+    pub fn random_ranged(min: f32, max: f32) -> Self {
+        Vec3 {
+            e: [
+                rand_float_ranged(min, max),
+                rand_float_ranged(min, max),
+                rand_float_ranged(min, max)
+            ]
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let point = Vec3::random_ranged(-1.0, 1.0);
+            if point.len_squared() <= 1.0 {
+                return point;
+            }
         }
     }
 
@@ -108,6 +134,16 @@ impl std::ops::Add for Vec3 {
 }
 
 impl std::ops::Add<&Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn add(self, rhs: &Vec3) -> Self::Output {
+        Vec3 {
+            e: [self[0] + rhs[0], self[1] + rhs[1], self[2] + rhs[2]]
+        }
+    }
+}
+
+impl std::ops::Add<&Vec3> for &Vec3 {
     type Output = Vec3;
 
     fn add(self, rhs: &Vec3) -> Self::Output {

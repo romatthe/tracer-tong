@@ -55,6 +55,10 @@ impl Hit {
         &self.normal
     }
 
+    pub fn point(&self) -> &Vec3 {
+        &self.point
+    }
+
     fn set_face_normal(&mut self, ray: &Ray, outward_normal: Vec3) {
         self.front_face = ray.direction().dot(&outward_normal) < 0.0;
         self.normal = if self.front_face {

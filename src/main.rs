@@ -1,6 +1,6 @@
 use crate::color::{Color, write_color};
 use crate::ray::Ray;
-use crate::vec::Point;
+use crate::vec::{Point, Vec3};
 use crate::scene::{Hit, SceneObject, Sphere, Camera};
 
 mod color;
@@ -9,11 +9,18 @@ mod scene;
 mod util;
 mod vec;
 
-fn ray_color(r: &Ray, world: &dyn SceneObject) -> Color {
+fn ray_color(r: &Ray, world: &dyn SceneObject, depth: u32) -> Color {
     let mut hit = Hit::default();
 
+    // If we've exceeded the ray bounce limit, no more light  is gathered
+    if depth <= 0 {
+        return Color::empty();
+    }
+
     if world.hit(r, 0.0, f32::INFINITY, &mut hit) {
-        return (Color::new(1.0, 1.0, 1.0) + hit.normal()) * 0.5;
+        let target = hit.normal() + hit.point() + Vec3::random_in_unit_sphere();
+        let ray = Ray::new(hit.point().clone(), target - hit.point());
+        return ray_color(&ray, world, depth - 1) * 0.5;
     }
 
     let unit_direction = r.direction().unit();
@@ -48,6 +55,7 @@ fn main() {
     const IMAGE_WIDTH: u32 = 400;
     const IMAGE_HEIGHT: u32 = ((IMAGE_WIDTH as f32) / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL: u32 = 100;
+    const MAX_DEPTH: u32 = 50;
 
     // World
     let world: Vec<Box<dyn SceneObject>> = vec![
@@ -56,15 +64,7 @@ fn main() {
     ];
 
     // Camera
-    // let viewport_height = 2.0;
-    // let viewport_width = ASPECT_RATIO * viewport_height;
-    // let focal_length = 1.0;
     let camera = Camera::new();
-
-    // let origin = Point::new(0.0, 0.0, 0.0);
-    // let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    // let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    // let lower_left_corner = &origin - &(&horizontal / 2.0) - (&vertical / 2.0) - Vec3::new(0.0, 0.0, focal_length);
 
     // Render
     println!("P3\n{} {}\n255", IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -82,7 +82,7 @@ fn main() {
                 let v = (h as f32 + util::rand_float()) / (IMAGE_HEIGHT - 1) as f32;
 
                 let ray = camera.get_ray(u, v);
-                pixel_color += ray_color(&ray, &world);
+                pixel_color += ray_color(&ray, &world, MAX_DEPTH);
             }
 
             write_color(pixel_color, SAMPLES_PER_PIXEL);
