@@ -120,8 +120,8 @@ impl std::ops::Add<&Vec3> for Vec3 {
 impl std::ops::AddAssign for Vec3 {
     fn add_assign(&mut self, rhs: Self) {
         self.e[0] += rhs[0];
-        self.e[1] += rhs[2];
-        self.e[2] += rhs[3];
+        self.e[1] += rhs[1];
+        self.e[2] += rhs[2];
     }
 }
 
